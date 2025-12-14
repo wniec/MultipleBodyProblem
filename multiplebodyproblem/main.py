@@ -1,4 +1,15 @@
-from generator import generate_nearby_stars
+from matplotlib import pyplot as plt
+
+from generator import generate_stars
+
 if __name__ == "__main__":
-    df = generate_nearby_stars(500)
-    print(df)
+    masses, positions, velocities = generate_stars(500)
+    plt.hist(masses.get())
+    plt.savefig("masses.png")
+    plt.close()
+    plt.hist(positions[:, 0].get())
+    plt.savefig("positions.png")
+    plt.close()
+    plt.hist(velocities[:, 0].get())
+    plt.savefig("velocities.png")
+    plt.close()
