@@ -38,17 +38,17 @@ def start_engine(fig, scatter, stats_text, d_pos, physics_step_func, physics_arg
 
     def background_wrapper():
         global running, physics_counter
-        while running:
-            physics_step_func(*physics_args)
-            physics_counter += 1
-            time.sleep(0)  # never delete this shit!
+        # while running:
+        #     physics_step_func(*physics_args)
+        #     physics_counter += 1
+        #     time.sleep(0)  # never delete this shit!
 
         # this might be faster / better. Testing required
-        # while running:
-        #     for _ in range(5):
-        #         physics_step_func(*physics_args)
-        #     physics_counter += 5
-        #     time.sleep(0.0001)
+        while running:
+            for _ in range(5):
+                physics_step_func(*physics_args)
+            physics_counter += 5
+            time.sleep(0)  # never delete this shit!
 
     t = threading.Thread(target=background_wrapper, daemon=True)
     t.start()
