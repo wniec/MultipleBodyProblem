@@ -22,11 +22,11 @@ def run_simulation(n_bodies, threads_per_block, dt, G, SOFTENING, interval, seed
     d_vel = cuda.to_device(vel)
     d_mass = cuda.to_device(mass)
 
-    fig, ax, scatter = animator.setup_3d_stage(mass, pos)
+    fig, ax, scatter, stats_text = animator.setup_3d_stage(mass, pos)
 
     physics_args = (d_pos, d_vel, d_mass, dt, n_bodies, G, SOFTENING, blocks, threads_per_block)
 
-    animator.start_engine(fig, scatter, d_pos, physics_step, physics_args, my_lock, interval=interval)
+    animator.start_engine(fig, scatter, stats_text, d_pos, physics_step, physics_args, my_lock, interval=interval)
 
     # fig = plt.figure(figsize=(10, 8))
     # ax = fig.add_subplot(111, projection="3d")
