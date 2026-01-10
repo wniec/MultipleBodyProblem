@@ -1,9 +1,28 @@
-from generator import generate_stars
-from utils import save_hists, static_visualization_3d
+from utils import run_simulation
 
 if __name__ == "__main__":
-    n_stars = 100
-    masses, positions, velocities = generate_stars(n_stars)
+    N_BODIES = 10
+    THREADS_PER_BLOCK = 32
+    DT = 0.0000001
+    G = 1e5
+    SOFTENING = 1e-1
+    SEED = 213769420
 
-    save_hists(masses, positions, velocities)
-    static_visualization_3d(masses, positions)
+    # for animation (1000/interval = FPS)
+    INTERVAL = 16
+
+    # balancing N_BODIES and G is tricky. I noticed that values 100 and 1e4 works well (1000, 1e3), (10, 1e5). I assume
+    # we need "constant total value of gravity (XD) balance". Maybe it will be better to set some formula for it?
+
+    # BE AWARE of DT. For faster gpu even SMALLER DT is needed
+
+    # We might not need locking. Require further testing on animation quality and performance impact
+
+    # TODO
+    # Benchmarks for different N_BODIES and THREADS_PER_BLOCK
+    # Easy way of disabling animation to test max performance
+    # Is my project structure correct? Maybe there is nicer way for this project. I did my best
+
+    run_simulation(N_BODIES, threads_per_block=THREADS_PER_BLOCK, dt=DT, G=G, SOFTENING=SOFTENING, seed=SEED, interval=INTERVAL)
+
+
