@@ -1,6 +1,7 @@
 from numba import cuda
 import math
 
+
 @cuda.jit
 def nbody_kernel(pos, vel, mass, dt, n_bodies, G, SOFTENING):
     i = cuda.grid(1)

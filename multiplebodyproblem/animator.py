@@ -1,6 +1,10 @@
 import threading
 import time
-
+import matplotlib
+try:
+    matplotlib.use("Qt5Agg")
+except:
+    pass
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,6 +15,7 @@ physics_counter = 0
 last_time = time.time()
 last_count = 0
 
+
 def setup_3d_stage(mass, pos):
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection="3d")
@@ -19,46 +24,62 @@ def setup_3d_stage(mass, pos):
     fig.patch.set_facecolor("black")
     ax.grid(False)
 
-    ax.set_xlim(-3, 3)
-    ax.set_ylim(-3, 3)
-    ax.set_zlim(-3, 3)
+    ax.xaxis.pane.fill = False
+    ax.yaxis.pane.fill = False
+    ax.zaxis.pane.fill = False
+
+    ax.set_xlim(-2, 2)
+    ax.set_ylim(-2, 2)
+    ax.set_zlim(-2, 2)
 
     scatter = ax.scatter(
-        pos[:, 0], pos[:, 1], pos[:, 2],
-        c=mass, s=np.log(mass + 1) * 20, cmap="hsv", alpha=0.7
+        pos[:, 0],
+        pos[:, 1],
+        pos[:, 2],
+        c=mass,
+        s=np.log(mass + 1) * 10,
+        cmap="plasma",
+        alpha=0.8,
     )
 
-    stats_text = ax.text2D(0.02, 0.95, "", transform=ax.transAxes, color="#00FF00", family='monospace')
+    stats_text = ax.text2D(
+        0.02, 0.95, "", transform=ax.transAxes, color="#00FF00", family="monospace"
+    )
 
     return fig, ax, scatter, stats_text
 
 
-def start_engine(fig, scatter, stats_text, d_pos, physics_step_func, physics_args, data_lock, interval):
+def start_engine(
+    fig,
+    scatter,
+    stats_text,
+    d_pos,
+    physics_step_func,
+    physics_args,
+    data_lock,
+    interval,
+):
     global running
 
     def background_wrapper():
         global running, physics_counter
-        # while running:
-        #     physics_step_func(*physics_args)
-        #     physics_counter += 1
-        #     time.sleep(0)  # never delete this shit!
-
-        # this might be faster / better. Testing required
         while running:
-            for _ in range(5):
+            # Increased batch size because why not
+            for _ in range(10):
                 physics_step_func(*physics_args)
-            physics_counter += 5
-            time.sleep(0)  # never delete this shit!
+            physics_counter += 10
+            time.sleep(0.001)  # Small sleep to let the CPU breathe
 
     t = threading.Thread(target=background_wrapper, daemon=True)
     t.start()
-
 
     def update_plot(frame):
         global last_time, last_count, physics_counter
 
         with data_lock:
             pos_cpu = d_pos.copy_to_host()
+            center = pos_cpu.mean(axis=0)
+            pos_cpu -= center
 
         scatter._offsets3d = (pos_cpu[:, 0], pos_cpu[:, 1], pos_cpu[:, 2])
 
@@ -77,8 +98,9 @@ def start_engine(fig, scatter, stats_text, d_pos, physics_step_func, physics_arg
 
         return scatter, stats_text
 
-
-    anim = FuncAnimation(fig, update_plot, interval=interval, blit=False, cache_frame_data=False)
+    _ = FuncAnimation(
+        fig, update_plot, interval=interval, blit=False, cache_frame_data=False
+    )
     plt.show()
 
     running = False
