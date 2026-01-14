@@ -68,7 +68,7 @@ def start_engine(
             for _ in range(10):
                 physics_step_func(*physics_args)
             physics_counter += 10
-            time.sleep(0.001)  # Small sleep to let the CPU breathe
+            time.sleep(0)  # Small sleep to let the CPU breathe
 
     t = threading.Thread(target=background_wrapper, daemon=True)
     t.start()
@@ -78,8 +78,10 @@ def start_engine(
 
         with data_lock:
             pos_cpu = d_pos.copy_to_host()
-            center = pos_cpu.mean(axis=0)
-            pos_cpu -= center
+
+        masses = physics_args[2].copy_to_host()
+        center = (masses @ pos_cpu) / masses.sum()
+        pos_cpu -= center
 
         scatter._offsets3d = (pos_cpu[:, 0], pos_cpu[:, 1], pos_cpu[:, 2])
 

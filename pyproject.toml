@@ -5,10 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "astroquery>=0.4.11",
     "cupy-cuda12x>=13.6.0",
     "matplotlib>=3.10.8",
     "numba>=0.63.1",
+    "numpy>=2.3.5",
     "pandas>=2.3.3",
     "pyqt5>=5.15.11",
 ]

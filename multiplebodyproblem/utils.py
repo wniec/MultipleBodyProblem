@@ -21,16 +21,14 @@ def run_simulation(n_bodies, threads_per_block, dt, G, SOFTENING, interval, seed
     physics_args = (d_pos, d_vel, d_mass, dt, n_bodies, G, SOFTENING, blocks, threads_per_block)
     if headless:
         TARGET_STEPS = 10000
-        BATCH_SIZE = 100
 
         print(f"Running headless benchmark ({TARGET_STEPS} steps)...")
 
         start_time = time.time()
 
-        for _ in range(0, TARGET_STEPS, BATCH_SIZE):
-            for _ in range(BATCH_SIZE):
-                physics_step(*physics_args)
-        cuda.synchronize()
+        for _ in range(TARGET_STEPS):
+            physics_step(*physics_args)
+
 
         end_time = time.time()
         elapsed = end_time - start_time
