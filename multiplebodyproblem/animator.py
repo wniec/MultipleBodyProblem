@@ -1,11 +1,10 @@
 import threading
 import time
 import matplotlib
-try:
-    matplotlib.use("Qt5Agg")
-except:
-    pass
-from matplotlib.animation import FuncAnimation
+
+matplotlib.use("Qt5Agg")
+
+from matplotlib.animation import FuncAnimation, FFMpegWriter
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -61,6 +60,16 @@ def start_engine(
 ):
     global running
 
+    writer = FFMpegWriter(fps=30)
+    writer.setup(fig, "my_animation.mp4", dpi=200)
+
+    def on_close(event):
+        global running
+        running = False
+        writer.finish()
+
+    fig.canvas.mpl_connect("close_event", on_close)
+
     def background_wrapper():
         global running, physics_counter
         while running:
@@ -97,6 +106,9 @@ def start_engine(
 
             last_time = current_time
             last_count = current_count
+
+        if plt.fignum_exists(fig.number):
+            writer.grab_frame()
 
         return scatter, stats_text
 

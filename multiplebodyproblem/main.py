@@ -6,23 +6,25 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="GPU N-Body Gravity Simulation")
 
     parser.add_argument(
-        "--bodies", "-n",
+        "--bodies",
+        "-n",
         type=int,
         default=64,
-        help="Number of stars/bodies to simulate (default: 64)"
+        help="Number of stars/bodies to simulate (default: 64)",
     )
 
     parser.add_argument(
-        "--tpb", "-t",
+        "--tpb",
+        "-t",
         type=int,
         default=128,
-        help="Threads per block for CUDA kernel (default: 128)"
+        help="Threads per block for CUDA kernel (default: 128)",
     )
 
     parser.add_argument(
         "--headless",
         action="store_true",
-        help="Run in headless mode (no animation) for benchmarking"
+        help="Run in headless mode (no animation) for benchmarking",
     )
 
     args = parser.parse_args()
