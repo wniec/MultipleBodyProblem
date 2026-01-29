@@ -37,14 +37,29 @@ uv sync
 ```
 
 ## Results:
+
+### An experiment was contucted comparing multiple values of number of bodies and threads per block parameters.
+### Hardware used for that: `NVIDIA GeForce GTX 1660 SUPER`
+parameters:
+- TU116 graphics processor
+- Cores: 1408
+- TMUs: 88
+- ROPs: 48
+- Memory Size: 6 GB
+- Memory Type: GDDR6
+- Bus Width: 192 bit
+
+
 each cell contains mean frames per second while simulating Multiple Body Problem.
 
 | n (Bodies) \ TPB (Threads per block) | 64      | 128       | 256      |
-|--------------------------------------|---------|-----------|----------| 
-| 16                                   | 9326.92 | 10276.06  | 9267.25  |
-| 32                                   | 9457.30 | 10209.93  | 9803.85  |
-| 64                                   | 9525.59 | 10140.10  | 10338.70 |
-| 128                                  | 7898.57 | 6070.70   | 6096.60  |
-| 256                                  | 4755.47 | 3404.22   | 1851.61  |
-| 512                                  | 2488.25 | 1807.65   | 959.67   |
-| 1024                                 | 1371.32 | 930.85    | 488.60   |
+|-------------------------------------|---------|-----------|----------| 
+| 16                                  | 9326.92 | 10276.06  | 9267.25  |
+| 32                                  | 9457.30 | 10209.93  | 9803.85  |
+| 64                                  | 9525.59 | 10140.10  | 10338.70 |
+| 128                                 | 7898.57 | 6070.70   | 6096.60  |
+| 256                                 | 4755.47 | 3404.22   | 1851.61  |
+| 512                                 | 2488.25 | 1807.65   | 959.67   |
+| 1024                                | 1371.32 | 930.85    | 488.60   |
+| 2048                                | 449.64  | 443.44    | 238.15   |
+| 4096                                | 154.23  | 117.55    | 117.90   |
