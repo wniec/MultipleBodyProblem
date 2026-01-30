@@ -17,6 +17,8 @@ last_count = 0
 
 def setup_3d_stage(mass, pos):
     fig = plt.figure(figsize=(10, 8))
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+
     ax = fig.add_subplot(111, projection="3d")
 
     ax.set_facecolor("black")
@@ -35,7 +37,7 @@ def setup_3d_stage(mass, pos):
         pos[:, 0],
         pos[:, 1],
         pos[:, 2],
-        c=mass,
+        c=np.log(mass + 1),
         s=np.log(mass + 1) * 10,
         cmap="plasma",
         alpha=0.8,
@@ -60,8 +62,8 @@ def start_engine(
 ):
     global running
 
-    writer = FFMpegWriter(fps=30)
-    writer.setup(fig, "my_animation.mp4", dpi=200)
+    writer = FFMpegWriter(fps=20)
+    writer.setup(fig, "my_animation.mp4", dpi=100)
 
     def on_close(event):
         global running
